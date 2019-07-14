@@ -4,6 +4,7 @@ import _ from "lodash";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import firebase from "../firebase.js";
 
 const db = firebase.firestore();
@@ -13,28 +14,27 @@ const Start = () => {
   // status can be 'IDLE' 'INVALID', 'PENDING', 'VALID'
   const [status, setStatus] = useState("IDLE");
   
-  const debounce = useCallback(_.debounce(x => {
-    console.log("hallå", roomname)
-    if (roomname !== "") {
+  const debounce = useCallback(_.debounce(roomname => {
+    if (roomname === "") {
+      setStatus("IDLE");
+    } else if (roomname !== "") {
       db.collection("rooms").doc(roomname).get()
         .then(docSnapshot => {
           if(docSnapshot.exists) {
-            setStatus("INVAlID");
-            console.log("upptaget...")
+            setStatus("INVALID");
           } else {
             setStatus("VALID");
-            console.log("KÖR HÅRT!")
           }
         })
     }
-    console.log(x);
   }, 500), [])
   
   const handleChange = e => {
-    setRoomname(e.target.value);
-    console.log(roomname)
+    const rm = e.target.value;
+    setRoomname(rm);
+    console.log(rm);
     setStatus("PENDING");
-    debounce("hej")
+    debounce(rm)
   }
 
   const handleSubmit = e => {
@@ -50,24 +50,30 @@ const Start = () => {
   }
 
   return <div>
-    <h1>Start</h1>
-    <form onSubmit={handleSubmit}>
-      {/* <input
-        type="text"
-        name="input"
-        placeholder="Which room?"
-        onChange={handleChange}
-        value={roomname}
-      /> */}
+    <Typography variant="h3">Start</Typography>
+    <form>
       <TextField
         id="roomname"
         label="Room Name"
         value={roomname}
         onChange={handleChange}
       />
-      <Button variant="contained" color="primary">Join</Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSubmit}
+        disabled={
+          status === "INVALID" ||
+          status === "PENDING" ||
+          roomname === ""
+        }
+      >
+        Join
+      </Button>
     </form>
     {status === "PENDING" && <CircularProgress />}
+    {status === "INVALID" && <Typography>Taken</Typography>}
+    {status === "VALID" && <Typography>Free!</Typography>}
   </div>
 }
 
