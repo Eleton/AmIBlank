@@ -16,7 +16,18 @@ const Choose = ({db, roomId}) => {
     setCharacter(character);
   }
 
-  const submitPlayer = () => {}
+  const submitPlayer = () => {
+    const playerId = btoa(`${player}${character}`);
+    db.collection("rooms").doc(roomId)
+      .collection("players").doc(playerId)
+      .set({ player, character })
+      .then(function() {
+        console.log("Player saved!");
+      })
+      .catch(function(error) {
+          console.error("Error writing document: ", error);
+      });
+  }
 
   return <div>
     <h1>Choose</h1>

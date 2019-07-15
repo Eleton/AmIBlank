@@ -47,13 +47,13 @@ const Start = ({ db }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    db.collection("rooms").doc(roomname).set({})
-    .then(function() {
-      console.log("Document successfully written!");
-    })
-    .catch(function(error) {
-        console.error("Error writing document: ", error);
-    });
+    db.collection("rooms").doc(generateId(roomname)).set({ active: false, roomname})
+      .then(function() {
+        console.log("Document successfully written!");
+      })
+      .catch(function(error) {
+          console.error("Error writing document: ", error);
+      });
   }
 
   return <div>
