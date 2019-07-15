@@ -13,10 +13,10 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Start path="/" />
-        <Choose path="/choose" />
-        <Idle path="/idle" />
-        <Game path="/game" />
+        <Start path="/" db={db} />
+        <Choose path=":room_id/choose" db={db} />
+        <Idle path="/idle" db={db} />
+        <Game path="/game" db={db} />
       </Router>
     </div>
   );

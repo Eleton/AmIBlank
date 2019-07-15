@@ -1,15 +1,23 @@
 import React, { useState, useCallback } from 'react';
-import { Router, Link } from "@reach/router";
+import { Link } from "@reach/router";
 import _ from "lodash";
-import CircularProgress from '@material-ui/core/CircularProgress';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import firebase from "../firebase.js";
+import {
+  CircularProgress,
+  TextField,
+  Button,
+  Typography
+} from "@material-ui/core/";
+import { format } from "date-fns";
 
-const db = firebase.firestore();
+const generateId = roomname => {
+  return btoa(`${
+    roomname.trim().toLowerCase()
+  }${
+    format(new Date(Date.now()), "YYYY-MM-DD")
+  }`);
+}
 
-const Start = () => {
+const Start = ({ db }) => {
   const [roomname, setRoomname] = useState("");
   // status can be 'IDLE' 'INVALID', 'PENDING', 'VALID'
   const [status, setStatus] = useState("IDLE");
@@ -18,7 +26,8 @@ const Start = () => {
     if (roomname === "") {
       setStatus("IDLE");
     } else if (roomname !== "") {
-      db.collection("rooms").doc(roomname).get()
+      const roomId = generateId(roomname);
+      db.collection("rooms").doc(roomId).get()
         .then(docSnapshot => {
           if(docSnapshot.exists) {
             setStatus("INVALID");
@@ -30,11 +39,10 @@ const Start = () => {
   }, 500), [])
   
   const handleChange = e => {
-    const rm = e.target.value;
-    setRoomname(rm);
-    console.log(rm);
+    const room = e.target.value;
+    setRoomname(room);
     setStatus("PENDING");
-    debounce(rm)
+    debounce(room)
   }
 
   const handleSubmit = e => {
@@ -46,7 +54,6 @@ const Start = () => {
     .catch(function(error) {
         console.error("Error writing document: ", error);
     });
-    alert(roomname);
   }
 
   return <div>
@@ -58,18 +65,20 @@ const Start = () => {
         value={roomname}
         onChange={handleChange}
       />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleSubmit}
-        disabled={
-          status === "INVALID" ||
-          status === "PENDING" ||
-          roomname === ""
-        }
-      >
-        Join
-      </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          disabled={
+            status === "INVALID" ||
+            status === "PENDING" ||
+            roomname === ""
+          }
+        >
+          <Link to={`${generateId(roomname)}/choose`}>
+            Join
+          </Link>
+        </Button>
     </form>
     {status === "PENDING" && <CircularProgress />}
     {status === "INVALID" && <Typography>Taken</Typography>}

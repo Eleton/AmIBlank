@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField } from '@material-ui/core/';
 
-const Choose = () => {
+const Choose = ({db, room_id}) => {
   const [player, setPlayer] = useState("");
   const [character, setCharacter] = useState("");
 
@@ -14,6 +14,8 @@ const Choose = () => {
     const character = e.target.value;
     setCharacter(character);
   }
+
+  console.log(room_id)
 
   return <div>
     <h1>Choose</h1>
