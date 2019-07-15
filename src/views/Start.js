@@ -75,7 +75,7 @@ const Start = ({ db }) => {
             roomname === ""
           }
         >
-          <Link to={`${generateId(roomname)}/choose`}>
+          <Link to={`/${generateId(roomname)}/choose`}>
             Join
           </Link>
         </Button>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { TextField } from '@material-ui/core/';
+import { TextField, Button } from '@material-ui/core/';
+import { Link } from "@reach/router";
 
-const Choose = ({db, room_id}) => {
+const Choose = ({db, roomId}) => {
   const [player, setPlayer] = useState("");
   const [character, setCharacter] = useState("");
 
@@ -15,7 +16,7 @@ const Choose = ({db, room_id}) => {
     setCharacter(character);
   }
 
-  console.log(room_id)
+  const submitPlayer = () => {}
 
   return <div>
     <h1>Choose</h1>
@@ -31,6 +32,19 @@ const Choose = ({db, room_id}) => {
       value={character}
       onChange={typeCharacterName}
     />
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={submitPlayer}
+      disabled={
+        player === "" ||
+        character === ""
+      }
+    >
+      <Link to={`/${roomId}/game`}>
+        Go
+      </Link>
+    </Button>
   </div>
 }
 

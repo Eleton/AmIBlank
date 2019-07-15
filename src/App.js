@@ -14,9 +14,9 @@ function App() {
     <div className="App">
       <Router>
         <Start path="/" db={db} />
-        <Choose path=":room_id/choose" db={db} />
+        <Choose path=":roomId/choose" db={db} />
         <Idle path="/idle" db={db} />
-        <Game path="/game" db={db} />
+        <Game path=":roomId/game" db={db} />
       </Router>
     </div>
   );
