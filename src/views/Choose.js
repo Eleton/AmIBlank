@@ -52,7 +52,7 @@ const Choose = ({db, roomId}) => {
         character === ""
       }
     >
-      <Link to={`/${roomId}/game`}>
+      <Link to={`/${roomId}/idle/${btoa(`${player}${character}`)}`}>
         Go
       </Link>
     </Button>

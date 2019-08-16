@@ -10,13 +10,16 @@ import Game from "./views/Game.js";
 const db = firebase.firestore();
 
 function App() {
+  const [creator, setCreator] = useState(false);
   return (
     <div className="App">
       <Router>
-        <Start path="/" db={db} />
-        <Choose path=":roomId/choose" db={db} />
+        <Start path="/" db={db} setCreator={setCreator} />
+        <Choose path=":roomId/choose" db={db} creator={creator} />
         <Idle path="/idle" db={db} />
+        <Idle path=":roomId/idle/:playerId" db={db} />
         <Game path=":roomId/game" db={db} />
+        <Game path=":roomId/game/:playerId" db={db} />
       </Router>
     </div>
   );
